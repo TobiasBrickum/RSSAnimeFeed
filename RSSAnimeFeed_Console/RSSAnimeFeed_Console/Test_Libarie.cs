@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace HTML_Downlaod_Konsole
 {
+    public enum enumWeekDay : int{ Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday }
+
     public class RSSLibarie
     {
         /// <summary>
@@ -30,9 +32,9 @@ namespace HTML_Downlaod_Konsole
                 List<string> rssAnimeTitle = new List<string>();
                 foreach (FeedItem feedItem in rssFeedItems)
                 {
-                    //Console.WriteLine($"{feedItem.Date.ToString("g")}\t{feedItem.Title}");
+                    Console.WriteLine($"{feedItem.Date.ToString("g")}\t{feedItem.Title}");
                     //Console.WriteLine(feedItem.Title);
-                    rssAnimeTitle.Add(feedItem.Title);    
+                    //rssAnimeTitle.Add(feedItem.Title);    
                 }
                 viewListInConsole(rssAnimeTitle);
             }
@@ -58,12 +60,11 @@ namespace HTML_Downlaod_Konsole
         /// </summary>
         /// <param name="weekday"></param>
         /// <returns>return true if the weekday = the currebtlly day</returns>
-        public bool viewCalendaryWeek(string weekday)
+        public bool viewCalendaryWeek(enumWeekDay weekDay)
         {
             DateOnly myDate = new DateOnly();
-            string weekDay = myDate.DayOfWeek.ToString();
-            string animeDay = weekday;
-            if (weekDay == animeDay)
+            string currentlyWeekDay = myDate.DayOfWeek.ToString();
+            if (currentlyWeekDay == weekDay.ToString())
             {
                 Console.WriteLine("\n\t" + "Time to refresh the anime realse title list :) " + weekDay);
                 return true;
@@ -78,10 +79,7 @@ namespace HTML_Downlaod_Konsole
         {
             try
             {
-                if (viewCalendaryWeek("Monday") == true)
-                {
 
-                }
             }
             catch (Exception e)
             {

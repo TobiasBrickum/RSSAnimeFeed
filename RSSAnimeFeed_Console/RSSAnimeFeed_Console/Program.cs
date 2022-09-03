@@ -29,8 +29,8 @@ namespace HTML_Downlaod_Konsole
         public static void TestRSSFEED()
         {
             RSSLibarie rssrREader = new RSSLibarie();
-            //rssrREader.ReadNewAnimeTitleRss();
-            rssrREader.viewCalendaryWeek("Monday");
+            rssrREader.ReadNewAnimeTitleRss();
+            rssrREader.viewCalendaryWeek(enumWeekDay.Saturday);
         }
 
         /// <summary>
