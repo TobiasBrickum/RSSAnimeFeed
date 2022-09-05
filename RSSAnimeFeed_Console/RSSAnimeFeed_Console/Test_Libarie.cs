@@ -1,4 +1,5 @@
-﻿using SimpleFeedReader;
+﻿using RSSAnimeFeed_Console;
+using SimpleFeedReader;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,9 +33,9 @@ namespace HTML_Downlaod_Konsole
                 List<string> rssAnimeTitle = new List<string>();
                 foreach (FeedItem feedItem in rssFeedItems)
                 {
-                    Console.WriteLine($"{feedItem.Date.ToString("g")}\t{feedItem.Title}");
+                    //Console.WriteLine($"{feedItem.Date.ToString("g")}\t{feedItem.Title}");
                     //Console.WriteLine(feedItem.Title);
-                    //rssAnimeTitle.Add(feedItem.Title);    
+                    rssAnimeTitle.Add(feedItem.Title);    
                 }
                 viewListInConsole(rssAnimeTitle);
             }
@@ -54,6 +55,20 @@ namespace HTML_Downlaod_Konsole
             }
             Console.WriteLine("\t" + patcher);
         }
+
+
+        public void CheckNewAnimes()
+        {
+            string fileName = "Crunchycroll_RSS_Anime_Liste.json";
+            string filePath = "";
+            string fileFullPath = "Crunchycroll_RSS_Anime_Liste.json";
+            SaveLoadJson saveLoadJson = new SaveLoadJson(fileName, filePath, fileFullPath);
+            saveLoadJson.LoadJson();
+            saveLoadJson.SaveJson();
+        }
+
+
+
 
         /// <summary>
         /// 

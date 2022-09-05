@@ -30,7 +30,7 @@ namespace HTML_Downlaod_Konsole
         {
             RSSLibarie rssrREader = new RSSLibarie();
             rssrREader.ReadNewAnimeTitleRss();
-            rssrREader.viewCalendaryWeek(enumWeekDay.Saturday);
+            rssrREader.CheckNewAnimes();
         }
 
         /// <summary>
