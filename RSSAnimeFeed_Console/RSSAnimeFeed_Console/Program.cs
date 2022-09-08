@@ -29,7 +29,7 @@ namespace HTML_Downlaod_Konsole
         public static void TestRSSFEED()
         {
             RSSLibarie rssrREader = new RSSLibarie();
-            rssrREader.ReadNewAnimeTitleRss();
+            //rssrREader.ReadNewAnimeTitleRss();
             rssrREader.CheckNewAnimes();
         }
 

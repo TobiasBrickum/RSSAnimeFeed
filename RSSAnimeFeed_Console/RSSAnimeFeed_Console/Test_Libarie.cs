@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace HTML_Downlaod_Konsole
 {
@@ -19,7 +20,7 @@ namespace HTML_Downlaod_Konsole
 
 
         /// </summary>+
-        public void ReadNewAnimeTitleRss()
+        public IEnumerable<FeedItem> ReadNewAnimeTitleRss()
         {
             try
             {
@@ -29,19 +30,24 @@ namespace HTML_Downlaod_Konsole
                 FeedReader feedReader = new FeedReader();
                 IEnumerable<FeedItem> rssFeedItems = feedReader.RetrieveFeed(rssUrl);
 
+                /*
                 // save readed anime titles
                 List<string> rssAnimeTitle = new List<string>();
                 foreach (FeedItem feedItem in rssFeedItems)
                 {
+                    rssAnimeTitle.Add(feedItem.Title);
                     //Console.WriteLine($"{feedItem.Date.ToString("g")}\t{feedItem.Title}");
                     //Console.WriteLine(feedItem.Title);
-                    rssAnimeTitle.Add(feedItem.Title);    
                 }
-                viewListInConsole(rssAnimeTitle);
+                //viewListInConsole(rssAnimeTitle);
+
+                */
+                return rssFeedItems;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                return null;
             }             
         }
 
@@ -61,13 +67,51 @@ namespace HTML_Downlaod_Konsole
         {
             string fileName = "Crunchycroll_RSS_Anime_Liste.json";
             string filePath = "";
-            string fileFullPath = "Crunchycroll_RSS_Anime_Liste.json";
+            string fileFullPath = "Crunchycroll_RSS_Anime_Liste.json";        
             SaveLoadJson saveLoadJson = new SaveLoadJson(fileName, filePath, fileFullPath);
-            saveLoadJson.LoadJson();
-            saveLoadJson.SaveJson();
+            FeedItem newsSaveRssAnimes = new FeedItem(); // save new animes
+            FeedItem oldLoadRssAnimes = new FeedItem();  // load old animes
+            FeedItem upcomingAnime = new FeedItem();     // ping new animes via discord
+
+            // file not exist -> read rss anime list and save als file
+            if (File.Exists(fileFullPath) == false)
+            {
+                newsSaveRssAnimes = ReadNewAnimeTitleRss();
+                saveLoadJson.SaveJson(newsSaveRssAnimes);
+                newsSaveRssAnimes = oldLoadRssAnimes;       // referenz
+            }
+
+            // is file exist -> read it and save as list 
+            if (File.Exists(fileFullPath) == true)
+            {
+                newsSaveRssAnimes = ReadNewAnimeTitleRss();
+                oldLoadRssAnimes = saveLoadJson.LoadJson();
+
+                upcomingAnime = returnNewAnims(oldLoadRssAnimes, newsSaveRssAnimes);
+            }
+        
+
         }
 
+        public List<string> returnNewAnims(List<string> oldAnimeList, List<string> newAnimelist)
+        {
+            // reverse list because newest animes saved on index 0
+            //oldAnimeList.Reverse();
+            //newAnimelist.Reverse();
 
+            if(oldAnimeList != null && newAnimelist != null)
+            {
+                if (oldAnimeList.Count == newAnimelist.Count)
+                {
+                    return null;
+                }
+
+                List<string> returnNewAnims = new List<string>();
+                
+            }
+
+            return null;
+        }
 
 
         /// <summary>
