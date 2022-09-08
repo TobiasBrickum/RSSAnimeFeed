@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace HTML_Downlaod_Konsole
+namespace RSSAnimeFeed_Console
 {
     public enum enumWeekDay : int{ Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday }
 
@@ -18,9 +18,43 @@ namespace HTML_Downlaod_Konsole
         /// https://github.com/RobThree/SimpleFeedReader
         /// Read RSS Recently Added Anime Videos from Crunchycroll
 
+        public void CheckNewAnimes()
+        {
+            string newAnimeFile = @"Crunchycroll_RSS_Anime_Liste.json";
+            string newAnimeFilePath = @"RssFiles\";
+            string newAnimeFileFullPath = @"RssFiles\Crunchycroll_RSS_Anime_Liste.json";
+            newAnimeFileFullPath = SaveLoadJsonGeneric<string>.CeckPathStatic(newAnimeFile, newAnimeFilePath);
+
+            /*
+            string oldAnimeFile = @"Crunchycroll_RSS_Anime_Liste.json";
+            string oldAnimeFilePath = @"RssFiles\";
+            string oldAnimeFileFullPath = @"RssFiles\Crunchycroll_RSS_Anime_Liste.json";
+            */
+            SaveLoadJsonGeneric<List<FeedItem>> saveLoadJsonGeneric = new SaveLoadJsonGeneric<List<FeedItem>>(newAnimeFile, newAnimeFilePath, newAnimeFileFullPath);
+            List<FeedItem> newsSaveRssAnimes = new List<FeedItem>(); // save new animes
+            List<FeedItem> oldLoadRssAnimes = new List<FeedItem>();  // load old animes
+            List<FeedItem> upcomingAnime = new List<FeedItem>();     // ping new animes via discord
+
+            // file not exist -> read rss anime list and save als file
+            if (File.Exists(newAnimeFileFullPath) == false)
+            {
+                newsSaveRssAnimes = ReadNewAnimeTitleRss();
+                saveLoadJsonGeneric.SaveJsonGeneric(newsSaveRssAnimes);
+                newsSaveRssAnimes = oldLoadRssAnimes;       // referenz
+            }
+
+            // is file exist -> read it and save as list 
+            if (File.Exists(newAnimeFileFullPath) == true)
+            {
+                newsSaveRssAnimes = ReadNewAnimeTitleRss(); // todo clean double code 
+                oldLoadRssAnimes = saveLoadJsonGeneric.LoadJsonGeneric();
+                upcomingAnime = returnNewAnims(oldLoadRssAnimes, newsSaveRssAnimes);
+            }
+        }
+
 
         /// </summary>+
-        public IEnumerable<FeedItem> ReadNewAnimeTitleRss()
+        public List<FeedItem> ReadNewAnimeTitleRss()
         {
             try
             {
@@ -29,6 +63,14 @@ namespace HTML_Downlaod_Konsole
 
                 FeedReader feedReader = new FeedReader();
                 IEnumerable<FeedItem> rssFeedItems = feedReader.RetrieveFeed(rssUrl);
+
+                List<FeedItem> test = new List<FeedItem>();
+                foreach (FeedItem feedItem in rssFeedItems)
+                {
+                    test.Add(feedItem);
+                    //Console.WriteLine($"{feedItem.Date.ToString("g")}\t{feedItem.Title}");
+                    //Console.WriteLine(feedItem.Title);
+                }
 
                 /*
                 // save readed anime titles
@@ -40,9 +82,9 @@ namespace HTML_Downlaod_Konsole
                     //Console.WriteLine(feedItem.Title);
                 }
                 //viewListInConsole(rssAnimeTitle);
-
                 */
-                return rssFeedItems;
+
+                return test;
             }
             catch (Exception e)
             {
@@ -51,49 +93,8 @@ namespace HTML_Downlaod_Konsole
             }             
         }
 
-        public void viewListInConsole(List<string> value)
-        {
-            string patcher = "#######################################################################################################################";
-            Console.WriteLine("\n\t" + patcher);
-            foreach (string line in value)
-            {
-                Console.WriteLine(line);
-            }
-            Console.WriteLine("\t" + patcher);
-        }
 
-
-        public void CheckNewAnimes()
-        {
-            string fileName = "Crunchycroll_RSS_Anime_Liste.json";
-            string filePath = "";
-            string fileFullPath = "Crunchycroll_RSS_Anime_Liste.json";        
-            SaveLoadJson saveLoadJson = new SaveLoadJson(fileName, filePath, fileFullPath);
-            FeedItem newsSaveRssAnimes = new FeedItem(); // save new animes
-            FeedItem oldLoadRssAnimes = new FeedItem();  // load old animes
-            FeedItem upcomingAnime = new FeedItem();     // ping new animes via discord
-
-            // file not exist -> read rss anime list and save als file
-            if (File.Exists(fileFullPath) == false)
-            {
-                newsSaveRssAnimes = ReadNewAnimeTitleRss();
-                saveLoadJson.SaveJson(newsSaveRssAnimes);
-                newsSaveRssAnimes = oldLoadRssAnimes;       // referenz
-            }
-
-            // is file exist -> read it and save as list 
-            if (File.Exists(fileFullPath) == true)
-            {
-                newsSaveRssAnimes = ReadNewAnimeTitleRss();
-                oldLoadRssAnimes = saveLoadJson.LoadJson();
-
-                upcomingAnime = returnNewAnims(oldLoadRssAnimes, newsSaveRssAnimes);
-            }
-        
-
-        }
-
-        public List<string> returnNewAnims(List<string> oldAnimeList, List<string> newAnimelist)
+        public List<FeedItem> returnNewAnims(List<FeedItem> oldAnimeList, List<FeedItem> newAnimelist)
         {
             // reverse list because newest animes saved on index 0
             //oldAnimeList.Reverse();
@@ -105,15 +106,13 @@ namespace HTML_Downlaod_Konsole
                 {
                     return null;
                 }
-
-                List<string> returnNewAnims = new List<string>();
-                
+                List<FeedItem> returnNewAnims = new List<FeedItem>();             
             }
-
             return null;
         }
 
 
+        /*
         /// <summary>
         /// 
         /// </summary>
@@ -146,6 +145,18 @@ namespace HTML_Downlaod_Konsole
             }
 
 
+        }
+        */
+
+        public static void viewListInConsole(List<string> value)
+        {
+            string patcher = "#######################################################################################################################";
+            Console.WriteLine("\n\t" + patcher);
+            foreach (string line in value)
+            {
+                Console.WriteLine(line);
+            }
+            Console.WriteLine("\t" + patcher);
         }
     }
 }
