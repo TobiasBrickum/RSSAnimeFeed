@@ -18,56 +18,65 @@ namespace RSSAnimeFeed_Console
         /// https://github.com/RobThree/SimpleFeedReader
         /// Read RSS Recently Added Anime Videos from Crunchycroll
 
+        char seperator = Path.DirectorySeparatorChar;
+
         public void CheckNewAnimes()
         {
-            string newAnimeFile = @"Crunchycroll_RSS_Anime_Liste.json";
-            string newAnimeFilePath = @"RssFiles\";
-            string newAnimeFileFullPath = @"RssFiles\Crunchycroll_RSS_Anime_Liste.json";
-            newAnimeFileFullPath = SaveLoadJsonGeneric<string>.CeckPathStatic(newAnimeFile, newAnimeFilePath);
-
             /*
-            string oldAnimeFile = @"Crunchycroll_RSS_Anime_Liste.json";
-            string oldAnimeFilePath = @"RssFiles\";
-            string oldAnimeFileFullPath = @"RssFiles\Crunchycroll_RSS_Anime_Liste.json";
+            string newAnimeFile = $"New_Anime_Title.json";
+            string newAnimeFilePath = $"Rss_Feed_Files";
+            string newAnimeFileFullPath = newAnimeFilePath + seperator + newAnimeFile;
             */
-            SaveLoadJsonGeneric<List<FeedItem>> saveLoadJsonGeneric = new SaveLoadJsonGeneric<List<FeedItem>>(newAnimeFile, newAnimeFilePath, newAnimeFileFullPath);
-            List<FeedItem> newsSaveRssAnimes = new List<FeedItem>(); // save new animes
-            List<FeedItem> oldLoadRssAnimes = new List<FeedItem>();  // load old animes
-            List<FeedItem> upcomingAnime = new List<FeedItem>();     // ping new animes via discord
 
-            // file not exist -> read rss anime list and save als file
-            if (File.Exists(newAnimeFileFullPath) == false)
+            string oldAnimeFile = $"Old_Anime_Title.json";
+            string oldAnimeFilePath = $"Rss_Feed_Files";
+            string oldAnimeFileFullPath = oldAnimeFilePath + seperator + oldAnimeFile;
+
+            SaveLoadJsonGeneric<List<FeedItem>> slJasonGeneric;
+            List<FeedItem> newSaveAnimeTitle = new List<FeedItem>();        // save new animes
+            List<FeedItem> oldLoadAnimeTitle = new List<FeedItem>();        // load old animes
+            List<FeedItem> pingUpcomingAnimeTitle = new List<FeedItem>();   // ping new animes via discord
+
+            // if file exist -> load anime title file in memory 
+            if (File.Exists(oldAnimeFileFullPath) == true)
             {
-                newsSaveRssAnimes = ReadNewAnimeTitleRss();
-                saveLoadJsonGeneric.SaveJsonGeneric(newsSaveRssAnimes);
-                newsSaveRssAnimes = oldLoadRssAnimes;       // referenz
+                slJasonGeneric = new SaveLoadJsonGeneric<List<FeedItem>>(oldAnimeFile, oldAnimeFilePath, oldAnimeFileFullPath);
+                newSaveAnimeTitle = ReadNewAnimeTitleRssFeed(); // read new anime title from rss feed
+                oldLoadAnimeTitle = slJasonGeneric.LoadJson();  // load old anime title file
+
+                // ping only the newest anime title
+                pingUpcomingAnimeTitle = returnNewAnims(oldLoadAnimeTitle, newSaveAnimeTitle);  
+                // save new anime list 
             }
 
-            // is file exist -> read it and save as list 
-            if (File.Exists(newAnimeFileFullPath) == true)
+            // file not exist -> read rss feed and save anime title in file
+            if (File.Exists(oldAnimeFileFullPath) == false)
             {
-                newsSaveRssAnimes = ReadNewAnimeTitleRss(); // todo clean double code 
-                oldLoadRssAnimes = saveLoadJsonGeneric.LoadJsonGeneric();
-                upcomingAnime = returnNewAnims(oldLoadRssAnimes, newsSaveRssAnimes);
+                slJasonGeneric = new SaveLoadJsonGeneric<List<FeedItem>>(oldAnimeFile, oldAnimeFilePath, oldAnimeFileFullPath);
+                newSaveAnimeTitle = ReadNewAnimeTitleRssFeed(); // read new anime title from rss feed
+                slJasonGeneric.SaveJson(newSaveAnimeTitle);     // save new anime title to file
+                                                                // ping only the newest anime title
             }
+
+
         }
 
 
         /// </summary>+
-        public List<FeedItem> ReadNewAnimeTitleRss()
+        public List<FeedItem> ReadNewAnimeTitleRssFeed()
         {
             try
             {
-                string rssUrl = "http://feeds.feedburner.com/crunchyroll/rss/anime?lang=deDE";
-                Console.WriteLine("Read rss from link: " + rssUrl);
+                string rssFeedUrl = "http://feeds.feedburner.com/crunchyroll/rss/anime?lang=deDE";
+                Console.WriteLine("Load rss feed from url: " + rssFeedUrl);
 
-                FeedReader feedReader = new FeedReader();
-                IEnumerable<FeedItem> rssFeedItems = feedReader.RetrieveFeed(rssUrl);
+                FeedReader rddFeedReader = new FeedReader();
+                IEnumerable<FeedItem> rssFeedItems = rddFeedReader.RetrieveFeed(rssFeedUrl);
 
-                List<FeedItem> test = new List<FeedItem>();
+                List<FeedItem> feedList = new List<FeedItem>();
                 foreach (FeedItem feedItem in rssFeedItems)
                 {
-                    test.Add(feedItem);
+                    feedList.Add(feedItem);
                     //Console.WriteLine($"{feedItem.Date.ToString("g")}\t{feedItem.Title}");
                     //Console.WriteLine(feedItem.Title);
                 }
@@ -84,11 +93,11 @@ namespace RSSAnimeFeed_Console
                 //viewListInConsole(rssAnimeTitle);
                 */
 
-                return test;
+                return feedList;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.Error.WriteLine(e.Message);
                 return null;
             }             
         }

@@ -19,13 +19,13 @@ namespace RSSAnimeFeed_Console
             Console.WriteLine("Shiki say: Hello, World!");
             Console.ForegroundColor = ConsoleColor.Green;
             Console.BackgroundColor = ConsoleColor.Black;
-            CheckNewAnimes();
+            CheckNewAnimeTitle();
         }
 
-        public static void CheckNewAnimes()
+        public static void CheckNewAnimeTitle()
         {
             // delete cach
-            DeleteRssFiles();
+            //DeleteCachFiles();
 
             // drove drove
             RSSLibarie rssrReader = new RSSLibarie();
@@ -41,9 +41,9 @@ namespace RSSAnimeFeed_Console
             testCode.Test_HTML_ReadInput_WriteInput();
         }
 
-        public static void DeleteRssFiles()
+        public static void DeleteCachFiles()
         {
-            string directoryName = "RssFiles";
+            string directoryName = "Rss_Feed_Files";
             try
             {
                 if(Directory.Exists(directoryName) == true)
@@ -54,7 +54,7 @@ namespace RSSAnimeFeed_Console
             }
             catch(Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.Error.WriteLine(e.Message);
             }
         }
     }

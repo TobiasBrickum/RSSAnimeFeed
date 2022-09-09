@@ -11,10 +11,11 @@ namespace RSSAnimeFeed_Console
     public class SaveLoadJsonGeneric<T>
     {
         // field
+        char seperator = Path.DirectorySeparatorChar;
         public string FileName { get; private set; }
         public string FilePath { get; private set; }
         public string FileFullPath { get; private set; }
-
+        
         // constructor
 
         /// <summary>
@@ -31,23 +32,29 @@ namespace RSSAnimeFeed_Console
         // todo use file seperator for different os users
         private void CeckPath(string fileName, string filePath, string fileFullPath)
         {
-            string pathSeperator = "";
             FileName = fileName;
             FilePath = filePath;
-            FileFullPath = filePath + fileName;
+            FileFullPath = fileFullPath;
+        }
+
+        public void SetNewPathValues(string fileName, string filePath, string fileFullPath)
+        {
+            FileName = fileName;
+            FilePath = filePath;
+            FileFullPath = fileFullPath;
         }
 
         // todo use file seperator for different os users
-        public static string CeckPathStatic(string fileName, string filePath)
+        public static string GetSeperatorPath()
         {
-            return filePath + fileName;
+            return null;
         }
 
         /// <summary>
         /// save json file
         /// string json = JsonConvert.SerializeObject(product);
         /// </summary>
-        public void SaveJsonGeneric(T value)
+        public void SaveJson(T value)
         {
             try
             {
@@ -56,25 +63,27 @@ namespace RSSAnimeFeed_Console
             }
             catch (Exception e)
             {
-                Console.WriteLine("Save Json File Error: " + e.Message);
+                Console.Error.WriteLine("Save Json File Error: " + e.Message);
             }
         }
+
 
         /// <summary>
         /// load json file
         /// Movie m = JsonConvert.DeserializeObject<Movie>(json);
         /// </summary>
-        public T LoadJsonGeneric()
+        public T LoadJson()
         {
             try
             {
                 //string[] temp = File.ReadAllLines(FileFullPath);
                 //return temp.ToList<string>();
-                return JsonConvert.DeserializeObject<T>(FileFullPath);
+                T ret = JsonConvert.DeserializeObject<T>(FileFullPath);
+                return ret;
             }
             catch (Exception e)
             {
-                Console.WriteLine("Load Json File Error: " + e.Message);
+                Console.Error.WriteLine("Load Json File Error: " + e.Message);
                 return default(T);
             }
         }
