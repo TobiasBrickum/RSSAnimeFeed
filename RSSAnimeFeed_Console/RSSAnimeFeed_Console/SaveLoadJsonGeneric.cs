@@ -11,7 +11,7 @@ namespace RSSAnimeFeed_Console
     public class SaveLoadJsonGeneric<T>
     {
         // field
-        char seperator = Path.DirectorySeparatorChar;
+        public char seperator;
         public string FileName { get; private set; }
         public string FilePath { get; private set; }
         public string FileFullPath { get; private set; }
@@ -29,14 +29,16 @@ namespace RSSAnimeFeed_Console
             CeckPath(fileName, filePath, fileFullPath);
         }
 
-        // todo use file seperator for different os users
+        // todo
         private void CeckPath(string fileName, string filePath, string fileFullPath)
         {
             FileName = fileName;
             FilePath = filePath;
             FileFullPath = fileFullPath;
+            seperator = Path.DirectorySeparatorChar;
         }
 
+        // todo
         public void SetNewPathValues(string fileName, string filePath, string fileFullPath)
         {
             FileName = fileName;
@@ -44,7 +46,7 @@ namespace RSSAnimeFeed_Console
             FileFullPath = fileFullPath;
         }
 
-        // todo use file seperator for different os users
+        // todo
         public static string GetSeperatorPath()
         {
             return null;

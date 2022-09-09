@@ -22,6 +22,17 @@ namespace RSSAnimeFeed_Console
             CheckNewAnimeTitle();
         }
 
+        public static void ViewListInConsole(List<string> value)
+        {
+            string delimiter = "#######################################################################################################################";
+            Console.WriteLine("\n\t" + delimiter);
+            foreach (string line in value)
+            {
+                Console.WriteLine(line);
+            }
+            Console.WriteLine("\t" + delimiter);
+        }
+
         public static void CheckNewAnimeTitle()
         {
             // delete cach
@@ -30,7 +41,7 @@ namespace RSSAnimeFeed_Console
             // drove drove
             RSSLibarie rssrReader = new RSSLibarie();
             //rssrREader.ReadNewAnimeTitleRss();
-            rssrReader.CheckNewAnimes();
+            rssrReader.CheckNewAnimeTitleExist();
         }
 
         // old test code
