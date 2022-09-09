@@ -19,7 +19,9 @@ namespace RSSAnimeFeed_Console
             Console.WriteLine("Shiki say: Hello, World!");
             Console.ForegroundColor = ConsoleColor.Green;
             Console.BackgroundColor = ConsoleColor.Black;
-            CheckNewAnimeTitle();
+            //CheckNewAnimeTitle();
+
+            TestSaveLoadJsonFiles();
         }
 
         public static void ViewListInConsole(List<string> value)
@@ -67,6 +69,19 @@ namespace RSSAnimeFeed_Console
             {
                 Console.Error.WriteLine(e.Message);
             }
+        }
+
+        public static void TestSaveLoadJsonFiles()
+        {
+            char seperator = Path.DirectorySeparatorChar;
+            string oldAnimeFile = $"Test.json";
+            string oldAnimeFilePath = $"Rss_Feed_Files";
+            string oldAnimeFileFullPath = oldAnimeFilePath + seperator + oldAnimeFile;
+
+            SaveLoadJsonGeneric<RSSLibarie> jsonCreator = new SaveLoadJsonGeneric<RSSLibarie>(oldAnimeFile, oldAnimeFilePath, oldAnimeFileFullPath);
+            RSSLibarie rss = new RSSLibarie();
+            jsonCreator.SaveJson(rss);
+
         }
     }
 
