@@ -74,13 +74,18 @@ namespace RSSAnimeFeed_Console
         /// load json file
         /// Movie m = JsonConvert.DeserializeObject<Movie>(json);
         /// </summary>
-        public T LoadJson()
+        public void LoadJson<T>()
         {
             try
             {
                 //string[] temp = File.ReadAllLines(FileFullPath);
                 //return temp.ToList<string>();
+
+                //var respContent = await Content.ReadAsStringAsync();
+                
                 T ret = JsonConvert.DeserializeObject<T>(FileFullPath);
+                Console.WriteLine("json loading values from file:");
+                Console.WriteLine(ret);
                 return ret;
             }
             catch (Exception e)

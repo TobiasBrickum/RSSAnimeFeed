@@ -14,6 +14,17 @@ namespace RSSAnimeFeed_Console
 
     public class RSSLibarie
     {
+        // field
+        public string Empty_Propertie { get; set; } 
+
+        // constructor
+        public RSSLibarie()
+        {
+            Empty_Propertie = "a";
+        }
+
+        // method
+
         /// <summary>
         /// https://github.com/RobThree/SimpleFeedReader
         /// Read RSS Recently Added Anime Videos from Crunchycroll
