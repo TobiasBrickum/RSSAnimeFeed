@@ -13,37 +13,7 @@ using Newtonsoft.Json;
 
 namespace RSSAnimeFeed_Console
 {
-    public class Product
-    {
-        public string Name { get; set; }    
-        public DateTime ExpiryDate { get; set; }   
-        public Double Price { get; set; } 
-        public string[] Sizes { get; set; }
 
-        public void Product_Json()
-        {
-            Product product = new Product();
-
-            product.Name = "Apple";
-            product.ExpiryDate = new DateTime(2008, 12, 28);
-            product.Price = 3.99;
-            product.Sizes = new string[] { "Small", "Medium", "Large" };
-
-            string output = JsonConvert.SerializeObject(product);
-            //{
-            //  "Name": "Apple",
-            //  "ExpiryDate": "2008-12-28T00:00:00",
-            //  "Price": 3.99,
-            //  "Sizes": [
-            //    "Small",
-            //    "Medium",
-            //    "Large"
-            //  ]
-            //}
-
-            Product deserializedProduct = JsonConvert.DeserializeObject<Product>(output);
-        }
-    }
 
 
     public class Program
@@ -53,15 +23,18 @@ namespace RSSAnimeFeed_Console
             Console.WriteLine("Shiki say: Hello, World!");
             Console.ForegroundColor = ConsoleColor.Green;
             Console.BackgroundColor = ConsoleColor.Black;
-            //CheckNewAnimeTitle();
 
-            TestSaveLoadJsonFiles();
+            //DeleteCachFiles();
+            CheckNewAnimeTitle();
+
+            //TestSaveLoadJsonFiles(); // tested and work
         }
 
-        public static void TestSaveLoadJsonFiles()
+        public static void TestSaveLoadJsonFiles()  // tested and work
         {
-            Product productJson = new Product();
-            productJson.Product_Json();
+            Test_Json productJson = new Test_Json();
+            productJson.SetProductJsonConvert();
+            productJson.GetProductJsonConvert();
             /*
             char seperator = Path.DirectorySeparatorChar;
             string oldAnimeFile = $"Test.json";

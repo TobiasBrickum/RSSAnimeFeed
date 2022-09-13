@@ -69,23 +69,16 @@ namespace RSSAnimeFeed_Console
             }
         }
 
-
         /// <summary>
         /// load json file
         /// Movie m = JsonConvert.DeserializeObject<Movie>(json);
         /// </summary>
-        public void LoadJson<T>()
+        public T LoadJson()
         {
             try
             {
-                //string[] temp = File.ReadAllLines(FileFullPath);
-                //return temp.ToList<string>();
-
-                //var respContent = await Content.ReadAsStringAsync();
-                
-                T ret = JsonConvert.DeserializeObject<T>(FileFullPath);
-                Console.WriteLine("json loading values from file:");
-                Console.WriteLine(ret);
+                string temp = File.ReadAllText(FileFullPath);
+                T ret = JsonConvert.DeserializeObject<T>(temp);
                 return ret;
             }
             catch (Exception e)
@@ -94,5 +87,6 @@ namespace RSSAnimeFeed_Console
                 return default(T);
             }
         }
+
     }
 }
