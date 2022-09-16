@@ -107,18 +107,22 @@ namespace RSSAnimeFeed_Console
             }             
         }
 
-
-        // todo <-- reconfig date with timestamps
+        /// <summary>
+        ///  todo <-- reconfig date with timestamps
+        /// https://www.unixtimestamp.com/ reconfig date with timestamps
+        /// </summary>
+        /// <param name="oldAnimeList"></param>
+        /// <param name="newAnimelist"></param>
+        /// <returns></returns>
         [Obsolete] 
         public List<FeedItem> CompareOldNewAnimeTitle(List<FeedItem> oldAnimeList, List<FeedItem> newAnimelist)
         {
-            // https://www.unixtimestamp.com/ reconfig date with timestamps
-            DateTimeOffset latestOldAnimeDay = oldAnimeList.ElementAt(0).Date;
-            DateTimeOffset newAnimeDay = newAnimelist.ElementAt(0).Date;
-            FeedItem oldestAnimeDate = oldAnimeList.ElementAt(0);
+            // 
+            int latestOldAnimeDay = GetDateDayOfTime(oldAnimeList.ElementAt(0));
+            int newAnimeDay       = GetDateDayOfTime(newAnimelist.ElementAt(0));
+            int tempAnimeDay      = 0;
 
-            // only for testing
-            //oldAnimeList.RemoveRange(0, 0);
+            //oldAnimeList.RemoveRange(0, 0);       // only for testing
             List<FeedItem> returnNewAnims = new List<FeedItem>();
             int oldAnimeListCount = oldAnimeList.Count;
             int newAnimelistCount = newAnimelist.Count;
@@ -127,8 +131,9 @@ namespace RSSAnimeFeed_Console
             {
                 for (int i = 0; i < newAnimelist.Count; i++)
                 {
+                    tempAnimeDay = GetDateDayOfTime(newAnimelist.ElementAt(i));
                     // add anime to returnList if anime realeased
-                    if (newAnimelist.ElementAt(i).Date >= oldestAnimeDate.Date) 
+                    if (tempAnimeDay >= latestOldAnimeDay) 
                     {
                         returnNewAnims.Add(newAnimelist.ElementAt(i));
                     }
@@ -137,10 +142,21 @@ namespace RSSAnimeFeed_Console
             return returnNewAnims;
         }
 
+        public int GetDateDayOfTime(FeedItem value) // return int '20221' from date 01.01.2022 
+        {
+            if (value == null)
+            {
+                return 0;
+            }
+            int ret = value.Date.Year + value.Date.DayOfYear;
+            return ret;
+        }
+
 
         // todo
         public void DiscordBotMessage(List<FeedItem> value)
         {
+
             DiscordPingBot discordPingBot = new DiscordPingBot();
 
         }
