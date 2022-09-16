@@ -53,22 +53,20 @@ namespace RSSAnimeFeed_Console
 
             if (File.Exists(oldAnimeFileFullPath) == false)
             {
-                slJasonGeneric.SaveJson(newSaveAnimeTitle);     // if not exist create new anime title file
-            }
-            else
-            {
-                oldLoadAnimeTitle = slJasonGeneric.LoadJson();  // load old anime title file
+                slJasonGeneric.SaveJson(newSaveAnimeTitle);     // if not exist create old anime title file
             }
 
-            pingUpcomingAnimeTitle = CompareOldNewAnimeTitle(oldLoadAnimeTitle, newSaveAnimeTitle);    // create ping only the newest anime title
-            slJasonGeneric.SaveJson(newSaveAnimeTitle);                                                // update old anime title file 
+            oldLoadAnimeTitle = slJasonGeneric.LoadJson();      // load old anime title file
+
+            pingUpcomingAnimeTitle = CompareOldNewAnimeTitle(oldLoadAnimeTitle, newSaveAnimeTitle);    // create updated anime ping list 
+            slJasonGeneric.SaveJson(newSaveAnimeTitle);                                                // update old anime file
 
             slJasonGeneric = new SaveLoadJsonGeneric<List<FeedItem>>(npingUpcomingAnimeTitleFile, pingUpcomingAnimeTitleFilePath, pingUpcomingAnimeTitleFileFullPath);
-            slJasonGeneric.SaveJson(pingUpcomingAnimeTitle);                                           // save only the newest anime title 
+            slJasonGeneric.SaveJson(pingUpcomingAnimeTitle);                                           // save anime ping list
 
 
-            ViewListFeedIitle(pingUpcomingAnimeTitle, "to ping anime title: ");
-            ViewListFeedIitle(newSaveAnimeTitle, "all new anime title");
+            ViewListFeedIitle(pingUpcomingAnimeTitle, "Updated Anime title to ping: ");
+            ViewListFeedIitle(newSaveAnimeTitle, "All Rss Feed animes");
 
             // feed discords bot with anime ping message
         }
@@ -94,13 +92,13 @@ namespace RSSAnimeFeed_Console
                 FeedReader rddFeedReader = new FeedReader();
                 IEnumerable<FeedItem> rssFeedItems = rddFeedReader.RetrieveFeed(rssFeedUrl);
 
-                List<FeedItem> feedList = new List<FeedItem>(); // create list with full rss feed items 
+                List<FeedItem> animeList = new List<FeedItem>(); // create list from rss anime feed 
                 foreach (FeedItem feedItem in rssFeedItems)
                 {
-                    feedList.Add(feedItem);
+                    animeList.Add(feedItem);
                 }
 
-                return feedList;
+                return animeList;
             }
             catch (Exception e)
             {
@@ -110,52 +108,31 @@ namespace RSSAnimeFeed_Console
         }
 
 
-        // todo
+        // todo <-- reconfig date with timestamps
+        [Obsolete] 
         public List<FeedItem> CompareOldNewAnimeTitle(List<FeedItem> oldAnimeList, List<FeedItem> newAnimelist)
         {
-            // delete the three first items on old anime list, to see what save in ping aniem file
-            oldAnimeList.RemoveRange(0, 2);
+            // https://www.unixtimestamp.com/ reconfig date with timestamps
+            DateTimeOffset latestOldAnimeDay = oldAnimeList.ElementAt(0).Date;
+            DateTimeOffset newAnimeDay = newAnimelist.ElementAt(0).Date;
+            FeedItem oldestAnimeDate = oldAnimeList.ElementAt(0);
 
+            // only for testing
+            //oldAnimeList.RemoveRange(0, 0);
             List<FeedItem> returnNewAnims = new List<FeedItem>();
-
             int oldAnimeListCount = oldAnimeList.Count;
             int newAnimelistCount = newAnimelist.Count;
 
-            if (oldAnimeList != null && newAnimelist != null)    // 
+            if (oldAnimeList != null && newAnimelist != null)
             {
-                FeedItem newestOldAnimeLIstDay = new FeedItem();
-                newestOldAnimeLIstDay = oldAnimeList.ElementAt(0);
-
                 for (int i = 0; i < newAnimelist.Count; i++)
                 {
-                    
-                    // add anime to list if newer date
-                    if (newAnimelist.ElementAt(i).Date > newestOldAnimeLIstDay.Date) 
+                    // add anime to returnList if anime realeased
+                    if (newAnimelist.ElementAt(i).Date >= oldestAnimeDate.Date) 
                     {
                         returnNewAnims.Add(newAnimelist.ElementAt(i));
                     }
-
-                    // add anime to list if date same but diferent name
-                    if(newAnimelist.ElementAt(i).Date == newestOldAnimeLIstDay.Date)
-                    {
-                        string currentAnimeTitle = newAnimelist.ElementAt(i).Title;
-
-                        foreach (FeedItem oldAnimeTitle in oldAnimeList)
-                        {
-                            if(oldAnimeTitle.Title == currentAnimeTitle)
-                            {
-                                returnNewAnims.Add(newAnimelist.ElementAt(i));
-                            }
-                        }
-                    }
-
-                }
-
-                // reverse anime list, so that the newest stay on top
-                if(returnNewAnims.Count > 1)
-                {
-                    returnNewAnims.Reverse();
-                }
+                }           
             }
             return returnNewAnims;
         }

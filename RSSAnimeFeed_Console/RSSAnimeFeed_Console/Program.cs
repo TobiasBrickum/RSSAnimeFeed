@@ -24,7 +24,7 @@ namespace RSSAnimeFeed_Console
             Console.ForegroundColor = ConsoleColor.Green;
             Console.BackgroundColor = ConsoleColor.Black;
 
-            //DeleteCachFiles();
+            DeleteCachFiles();
             CheckNewAnimeTitle();
 
             //TestSaveLoadJsonFiles(); // tested and work
