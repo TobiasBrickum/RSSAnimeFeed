@@ -1,15 +1,41 @@
-﻿using HTML_Downlaod_Konsole;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RSSAnimeFeed_Console
+namespace RSSAnimeFeed_Console.Test_Something
 {
     public class DoSomethingTestCode
     {
+        // old test code
+        public static void TestSomethingOld()
+        {
+            DoSomethingTestCode testCode = new DoSomethingTestCode();
+            testCode.TryStackOvebrflow();
+            testCode.Test_HTML_ReadInput_WriteInput();
+        }
+
+        public static void TestSaveLoadJsonFiles()  // tested and work
+        {
+            Test_Json productJson = new Test_Json();
+            productJson.SetProductJsonConvert();
+            productJson.GetProductJsonConvert();
+
+            char seperator = Path.DirectorySeparatorChar;
+            string oldAnimeFile = $"Test.json";
+            string oldAnimeFilePath = $"Rss_Feed_Files";
+            string oldAnimeFileFullPath = oldAnimeFilePath + seperator + oldAnimeFile;
+
+            SaveLoadJsonGeneric<RSSLibarie> jsonCreator = new SaveLoadJsonGeneric<RSSLibarie>(oldAnimeFile, oldAnimeFilePath, oldAnimeFileFullPath);
+            RSSLibarie rss = new RSSLibarie();
+            //rss.Empty_Propertie = "renamed";
+            jsonCreator.SaveJson(rss);
+        }
+
+
         /// <summary>
         /// Read HTML file...
         /// </summary>
@@ -27,7 +53,7 @@ namespace RSSAnimeFeed_Console
 
         public void Test_HTML_Downlaod_Picture()
         {
-            String anime = "https://cdn.discordapp.com/attachments/693433288987246642/1008342444456288296/";
+            string anime = "https://cdn.discordapp.com/attachments/693433288987246642/1008342444456288296/";
 
             string remoteUri = anime;
             string fileName = "unknown.png", myStringWebResource = null;

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RSSAnimeFeed_Console
+namespace RSSAnimeFeed_Console.Test_Something
 {
     public class Test_Json
     {
@@ -14,10 +14,10 @@ namespace RSSAnimeFeed_Console
 
         public string Name { get; set; }
         public DateTime ExpiryDate { get; set; }
-        public Double Price { get; set; }
+        public double Price { get; set; }
         public string[] Sizes { get; set; }
 
-        
+
         public void SetProductJsonConvert()
         {
 
@@ -35,7 +35,7 @@ namespace RSSAnimeFeed_Console
             product.Price = 3.99;
             product.Sizes = new string[] { "Small", "Medium", "Large" };
 
-            string output = JsonConvert.SerializeObject(product);   
+            string output = JsonConvert.SerializeObject(product);
             saveLoadJsonGeneric.SaveJson(output);
             //{
             //  "Name": "Apple",

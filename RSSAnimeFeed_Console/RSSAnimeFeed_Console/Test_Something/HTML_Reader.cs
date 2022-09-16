@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HTML_Downlaod_Konsole
+namespace RSSAnimeFeed_Console.Test_Something
 {
     public class HTML_Reader
     {
@@ -28,7 +28,7 @@ namespace HTML_Downlaod_Konsole
             osPathSeperator = Path.DirectorySeparatorChar.ToString();
 
             // check user input is empty or null
-            List<String> checkUserInputs = new List<string>();
+            List<string> checkUserInputs = new List<string>();
             checkUserInputs.Add(inputFileName);
             checkUserInputs.Add(outputFileName);
             checkUserInputs.Add(inputFilePath);
@@ -42,9 +42,9 @@ namespace HTML_Downlaod_Konsole
         /// </summary>
         /// <param name="checkStrings"></param>
         /// <exception cref="Exception"></exception>
-        private void checkIsNullOrEmpty(List<String> checkStrings)
+        private void checkIsNullOrEmpty(List<string> checkStrings)
         {
-            for(int i=0; i<checkStrings.Count; i++)
+            for (int i = 0; i < checkStrings.Count; i++)
             {
                 if (checkStrings.ElementAt(i) == null || checkStrings.ElementAt(i).Length <= 0)
                 {
@@ -61,7 +61,7 @@ namespace HTML_Downlaod_Konsole
         /// </summary>
         /// <param name="fullPath"> path from randomly os </param>
         /// <returns> parameter path works now under al os</returns>
-        public String PathSeperatorHelper(string fileName, string filePath)
+        public string PathSeperatorHelper(string fileName, string filePath)
         {
             string retPath = filePath + osPathSeperator + fileName;
             //@"C:\\Users\\Shiki\\Desktop\\DS4Windows_3.0.18_x64     //test patch
@@ -92,13 +92,13 @@ namespace HTML_Downlaod_Konsole
 
                 while (streamReader.ReadLine() != null)
                 {
-                    lreadLine.Add(streamReader.ReadLine()); 
+                    lreadLine.Add(streamReader.ReadLine());
                 }
 
-                Console.WriteLine("Readed html input lines: "+lreadLine.Count);
+                Console.WriteLine("Readed html input lines: " + lreadLine.Count);
                 return lreadLine;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
@@ -116,13 +116,13 @@ namespace HTML_Downlaod_Konsole
             try
             {
                 //string allLines = "";
-                for (int i=0; i<values.Count; i++)
+                for (int i = 0; i < values.Count; i++)
                 {
                     File.WriteAllText(outputFilePath, values.ElementAt(i));
 
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }

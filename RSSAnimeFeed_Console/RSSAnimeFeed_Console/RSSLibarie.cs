@@ -1,4 +1,4 @@
-﻿using RSSAnimeFeed_Console;
+﻿using RSSAnimeFeed_Console.Discord_Bot;
 using SimpleFeedReader;
 using System;
 using System.Collections.Generic;
@@ -10,28 +10,24 @@ using System.Xml.Linq;
 
 namespace RSSAnimeFeed_Console
 {
-    public enum enumWeekDay : int{ Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday }
+    public enum enumWeekDay : int { Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday }
 
     public class RSSLibarie
     {
         // field
-        public string Empty_Propertie { get; set; }
+        char seperator = Path.DirectorySeparatorChar;
+        //public string Empty_Propertie { get; set; }
 
         // constructor
         public RSSLibarie()
         {
-            Empty_Propertie = "a";
         }
-
-        // method
 
         /// <summary>
         /// https://github.com/RobThree/SimpleFeedReader
         /// Read RSS Recently Added Anime Videos from Crunchycroll
-
-        char seperator = Path.DirectorySeparatorChar;
-
-        public void CheckNewAnimeTitleExist()
+        /// </summary>
+        public List<FeedItem> CheckNewAnimeTitleExist()
         {
             string npingUpcomingAnimeTitleFile = $"Ping_Anime_Title.json";
             string pingUpcomingAnimeTitleFilePath = $"Rss_Feed_Files";
@@ -64,30 +60,25 @@ namespace RSSAnimeFeed_Console
             slJasonGeneric = new SaveLoadJsonGeneric<List<FeedItem>>(npingUpcomingAnimeTitleFile, pingUpcomingAnimeTitleFilePath, pingUpcomingAnimeTitleFileFullPath);
             slJasonGeneric.SaveJson(pingUpcomingAnimeTitle);                                           // save anime ping list
 
+            ViewInConsole.ViewList(pingUpcomingAnimeTitle, "Updated Anime title to ping: ");
+            ViewInConsole.ViewList(newSaveAnimeTitle, "All Rss Feed animes");
 
-            ViewListFeedIitle(pingUpcomingAnimeTitle, "Updated Anime title to ping: ");
-            ViewListFeedIitle(newSaveAnimeTitle, "All Rss Feed animes");
-
-            // feed discords bot with anime ping message
+            //feed discords bot with anime ping message
+            return pingUpcomingAnimeTitle;
         }
 
-        public void ViewListFeedIitle(List<FeedItem> animeList, string message)
-        {
-            Console.WriteLine("\n\n \t" + message);
-            Console.WriteLine();
-            foreach (FeedItem feedItem in animeList)
-            {
-                Console.WriteLine(feedItem.Date + "\t" + feedItem.Title);
-            }
-        }
-
-        /// </summary>+
-        public List<FeedItem> ReadRssFeedAnimeTitle()
+        /// <summary>
+        /// Return FeedItem list from rss feed url
+        /// 
+        /// </summary>
+        /// <returns>Anime List</returns>
+        public List<FeedItem> ReadRssFeedAnimeTitle()   // todo filter anime subs / dubs and language
         {
             try
             {
-                string rssFeedUrl = "http://feeds.feedburner.com/crunchyroll/rss/anime?lang=deDE";
-                Console.WriteLine("Load Rss Feed from following url: " + rssFeedUrl);
+                //string rssFeedUrl = "http://feeds.feedburner.com/crunchyroll/rss/anime?lang=deDE"; // from https://www.crunchyroll.com/de/feed
+                string rssFeedUrl = "https://www.crunchyroll.com/rss/anime?lang=deDE"; // from https://www.crunchyroll.com/de/feed
+                Console.WriteLine("\nLoad Rss Feed from following url: " + rssFeedUrl);
 
                 FeedReader rddFeedReader = new FeedReader();
                 IEnumerable<FeedItem> rssFeedItems = rddFeedReader.RetrieveFeed(rssFeedUrl);
@@ -142,7 +133,12 @@ namespace RSSAnimeFeed_Console
             return returnNewAnims;
         }
 
-        public int GetDateDayOfTime(FeedItem value) // return int '20221' from date 01.01.2022 
+        /// <summary>
+        /// return int '20221' from date 01.01.2022 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public int GetDateDayOfTime(FeedItem value)
         {
             if (value == null)
             {
@@ -152,13 +148,16 @@ namespace RSSAnimeFeed_Console
             return ret;
         }
 
-
-        // todo
+        /*
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
         public void DiscordBotMessage(List<FeedItem> value)
         {
 
             DiscordPingBot discordPingBot = new DiscordPingBot();
-
         }
+        */
     }
 }

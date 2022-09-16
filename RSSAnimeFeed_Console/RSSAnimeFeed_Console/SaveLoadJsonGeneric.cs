@@ -60,7 +60,7 @@ namespace RSSAnimeFeed_Console
         {
             try
             {
-                string jsonValue = JsonConvert.SerializeObject(value);
+                string jsonValue = JsonConvert.SerializeObject(value, Formatting.Indented);
                 File.WriteAllText(FileFullPath, jsonValue);
             }
             catch (Exception e)
@@ -77,8 +77,8 @@ namespace RSSAnimeFeed_Console
         {
             try
             {
-                string temp = File.ReadAllText(FileFullPath);
-                T ret = JsonConvert.DeserializeObject<T>(temp);
+                string jsonValue = File.ReadAllText(FileFullPath);
+                T ret = JsonConvert.DeserializeObject<T>(jsonValue);
                 return ret;
             }
             catch (Exception e)

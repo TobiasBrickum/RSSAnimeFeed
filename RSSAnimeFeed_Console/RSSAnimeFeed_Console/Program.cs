@@ -9,80 +9,50 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-
+using SimpleFeedReader;
+using RSSAnimeFeed_Console.Discord_Bot;
 
 namespace RSSAnimeFeed_Console
 {
-
-
-
     public class Program
     {
         static void Main(string[] args)
-        {
-            Console.WriteLine("Shiki say: Hello, World!");
+        {         
             Console.ForegroundColor = ConsoleColor.Green;
             Console.BackgroundColor = ConsoleColor.Black;
+            Console.WriteLine("\n\tShiki Say: Hello, World!");
 
-            DeleteCachFiles();
-            CheckNewAnimeTitle();
-
-            //TestSaveLoadJsonFiles(); // tested and work
-        }
-
-        public static void TestSaveLoadJsonFiles()  // tested and work
-        {
-            Test_Json productJson = new Test_Json();
-            productJson.SetProductJsonConvert();
-            productJson.GetProductJsonConvert();
-            /*
-            char seperator = Path.DirectorySeparatorChar;
-            string oldAnimeFile = $"Test.json";
-            string oldAnimeFilePath = $"Rss_Feed_Files";
-            string oldAnimeFileFullPath = oldAnimeFilePath + seperator + oldAnimeFile;
-
-            SaveLoadJsonGeneric<RSSLibarie> jsonCreator = new SaveLoadJsonGeneric<RSSLibarie>(oldAnimeFile, oldAnimeFilePath, oldAnimeFileFullPath);
-            RSSLibarie rss = new RSSLibarie();
-            rss.Empty_Propertie = "renamed";
-            jsonCreator.SaveJson(rss);
-
-
-            RSSLibarie jsonLoaded = jsonCreator.LoadJsonAsync();
-            Console.WriteLine("loaded json tets file = " + jsonLoaded.Empty_Propertie);
-            */
-        }
-
-        public static void ViewListInConsole(List<string> value)
-        {
-            string delimiter = "#######################################################################################################################";
-            Console.WriteLine("\n\t" + delimiter);
-            foreach (string line in value)
-            {
-                Console.WriteLine(line);
-            }
-            Console.WriteLine("\t" + delimiter);
-        }
-
-        public static void CheckNewAnimeTitle()
-        {
-            // delete cach
             //DeleteCachFiles();
-
-            // drove drove
-            RSSLibarie rssrReader = new RSSLibarie();
-            //rssrREader.ReadNewAnimeTitleRss();
-            rssrReader.CheckNewAnimeTitleExist();
+            List<FeedItem> pingAnimes = CheckNewAnimeTitle();   // get rss anime feed list
+            new Program().MainAsync(pingAnimes);                // Async is important for discord bot
         }
 
-        // old test code
-        public static void TestSomethingOld()
+        public async Task MainAsync(List<FeedItem> pingAnimes)  // Async Discord
         {
-            DoSomethingTestCode testCode = new DoSomethingTestCode();
-            testCode.TryStackOvebrflow();
-            testCode.Test_HTML_ReadInput_WriteInput();
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.WriteLine("\n\tShiki Say: Hello, World! In MainAsync Method :)");
+
+            SendAnimesToDiscordBot(pingAnimes);                 // ping updatet animes
         }
 
+        public async void SendAnimesToDiscordBot(List<FeedItem> pingAnimes)
+        {
+            DiscordPingBot animePingBot = new DiscordPingBot(pingAnimes);
+        }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public static List<FeedItem> CheckNewAnimeTitle()
+        {
+            RSSLibarie rssrReader = new RSSLibarie();
+            return rssrReader.CheckNewAnimeTitleExist();
+        }
+
+        /// <summary>
+        /// Detele programm folder
+        /// </summary>
         public static void DeleteCachFiles()
         {
             string directoryName = "Rss_Feed_Files";
@@ -100,8 +70,6 @@ namespace RSSAnimeFeed_Console
             }
         }
 
-
     }
-
 }
 
