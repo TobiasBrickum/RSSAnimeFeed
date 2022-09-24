@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SimpleFeedReader;
 using RSSAnimeFeed_Console.Discord_Bot;
+using Newtonsoft.Json.Linq;
+using Discord.Net;
+using Discord.WebSocket;
 
 namespace RSSAnimeFeed_Console
 {
@@ -27,7 +30,8 @@ namespace RSSAnimeFeed_Console
             new Program().MainAsync(pingAnimes);                // Async is important for discord bot
         }
 
-        public async Task MainAsync(List<FeedItem> pingAnimes)  // Async Discord
+        // Connect Discord Bot
+        public async Task MainAsync(List<FeedItem> pingAnimes)  // Async discord anime ping bot
         {
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.BackgroundColor = ConsoleColor.Black;
@@ -36,9 +40,11 @@ namespace RSSAnimeFeed_Console
             SendAnimesToDiscordBot(pingAnimes);                 // ping updatet animes
         }
 
+        // Connect Discord Bot
         public async void SendAnimesToDiscordBot(List<FeedItem> pingAnimes)
         {
             DiscordPingBot animePingBot = new DiscordPingBot(pingAnimes);
+            animePingBot.ConnectDiscordBot();
         }
 
         /// <summary>

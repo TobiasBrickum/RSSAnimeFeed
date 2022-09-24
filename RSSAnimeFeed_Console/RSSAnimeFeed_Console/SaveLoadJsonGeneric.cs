@@ -11,7 +11,7 @@ namespace RSSAnimeFeed_Console
     public class SaveLoadJsonGeneric<T>
     {
         // field
-        public char seperator;
+        public static char seperator;
         public string FileName { get; private set; }
         public string FilePath { get; private set; }
         public string FileFullPath { get; private set; }
