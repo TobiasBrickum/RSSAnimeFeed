@@ -11,12 +11,17 @@ namespace RSSAnimeFeed_Console
     public class SaveLoadJsonGeneric<T>
     {
         // field
-        public static char seperator;
+        public char Seperator { get; private set; }
         public string FileName { get; private set; }
         public string FilePath { get; private set; }
         public string FileFullPath { get; private set; }
-        
+
         // constructor
+
+        public SaveLoadJsonGeneric()
+        {
+            Seperator = Path.DirectorySeparatorChar;
+        }
 
         /// <summary>
         ///  
@@ -35,7 +40,7 @@ namespace RSSAnimeFeed_Console
             FileName = fileName;
             FilePath = filePath;
             FileFullPath = fileFullPath;
-            seperator = Path.DirectorySeparatorChar;
+            Seperator = Path.DirectorySeparatorChar;
         }
 
         // todo

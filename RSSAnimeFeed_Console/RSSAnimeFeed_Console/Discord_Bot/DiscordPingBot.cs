@@ -26,19 +26,16 @@ namespace RSSAnimeFeed_Console.Discord_Bot
         }
 
         /// <summary>
-        /// todo create initial config file with bot token ect.
+        /// todo create ini config file for bot token and file path ect.
         /// todo diferent path seperator outputs o_O
         /// </summary>
         /// <returns></returns>
         private string GetDiscordToken()
         {
             // C:\Users\User\Desktop\Discord_Anime_Ping_Bot_Token.json.txt
-            // char seperatorChar = SaveLoadJsonGeneric<string>.seperator;          // -> \0
-            // string seperator = SaveLoadJsonGeneric<string>.seperator.ToString(); // -> \0
-            string seperator = Path.DirectorySeparatorChar.ToString();              // -> \
+            string seperator = new SaveLoadJsonGeneric<string>().Seperator.ToString();
             string discordTokenFile = @"Discord_Anime_Ping_Bot_Token.json";
             string discordTokenFilePath = @"C:\Users\Shiki\Desktop";
-
             string discordTokenFileFullPath = discordTokenFilePath + seperator + discordTokenFile;
             SaveLoadJsonGeneric<string> svDiscordToken = new SaveLoadJsonGeneric<string>(discordTokenFile, discordTokenFilePath, discordTokenFileFullPath);
             //svDiscordToken.LoadJson("TestValue");
