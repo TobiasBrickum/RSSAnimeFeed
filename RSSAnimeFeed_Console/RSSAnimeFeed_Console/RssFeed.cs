@@ -1,25 +1,22 @@
-﻿using RSSAnimeFeed_Console.Discord_Bot;
-using SimpleFeedReader;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using SimpleFeedReader;
 
 namespace RSSAnimeFeed_Console
 {
-    public enum enumWeekDay : int { Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday }
-
-    public class RSSLibarie
+    public class RssFeed
     {
         // field
-        char seperator = Path.DirectorySeparatorChar;
+        char seperator = StaticValues.Seperator;
         //public string Empty_Propertie { get; set; }
 
         // constructor
-        public RSSLibarie()
+        public RssFeed()
         {
         }
 
@@ -37,14 +34,14 @@ namespace RSSAnimeFeed_Console
             string oldAnimeFilePath = $"Rss_Feed_Files";
             string oldAnimeFileFullPath = oldAnimeFilePath + seperator + oldAnimeFile;
 
-            SaveLoadJsonGeneric<List<FeedItem>> slJasonGeneric;
+            IOJsonGeneric<List<FeedItem>> slJasonGeneric;
             List<FeedItem> newSaveAnimeTitle = new List<FeedItem>();        // save new animes
             List<FeedItem> oldLoadAnimeTitle = new List<FeedItem>();        // load old animes
             List<FeedItem> pingUpcomingAnimeTitle = new List<FeedItem>();   // ping new animes via discord
 
             // if file exist -> load anime title file in memory 
 
-            slJasonGeneric = new SaveLoadJsonGeneric<List<FeedItem>>(oldAnimeFile, oldAnimeFilePath, oldAnimeFileFullPath);
+            slJasonGeneric = new IOJsonGeneric<List<FeedItem>>(oldAnimeFile, oldAnimeFilePath, oldAnimeFileFullPath);
             newSaveAnimeTitle = ReadRssFeedAnimeTitle();        // read new anime title from rss feed
 
             if (File.Exists(oldAnimeFileFullPath) == false)
@@ -57,7 +54,7 @@ namespace RSSAnimeFeed_Console
             pingUpcomingAnimeTitle = CompareOldNewAnimeTitle(oldLoadAnimeTitle, newSaveAnimeTitle);    // create updated anime ping list 
             slJasonGeneric.SaveJson(newSaveAnimeTitle);                                                // update old anime file
 
-            slJasonGeneric = new SaveLoadJsonGeneric<List<FeedItem>>(npingUpcomingAnimeTitleFile, pingUpcomingAnimeTitleFilePath, pingUpcomingAnimeTitleFileFullPath);
+            slJasonGeneric = new IOJsonGeneric<List<FeedItem>>(npingUpcomingAnimeTitleFile, pingUpcomingAnimeTitleFilePath, pingUpcomingAnimeTitleFileFullPath);
             slJasonGeneric.SaveJson(pingUpcomingAnimeTitle);                                           // save anime ping list
 
             ViewInConsole.ViewList(pingUpcomingAnimeTitle, "Updated Anime title to ping: ");
@@ -77,7 +74,7 @@ namespace RSSAnimeFeed_Console
             try
             {
                 //string rssFeedUrl = "http://feeds.feedburner.com/crunchyroll/rss/anime?lang=deDE"; // from https://www.crunchyroll.com/de/feed
-                string rssFeedUrl = "https://www.crunchyroll.com/rss/anime?lang=deDE"; // from https://www.crunchyroll.com/de/feed
+                string rssFeedUrl = "https://www.crunchyroll.com/rss/anime?lang=deDE";               // from https://www.crunchyroll.com/de/feed
                 Console.WriteLine("\nLoad Rss Feed from following url: " + rssFeedUrl);
 
                 FeedReader rddFeedReader = new FeedReader();

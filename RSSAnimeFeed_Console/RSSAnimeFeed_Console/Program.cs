@@ -4,56 +4,37 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using SimpleFeedReader;
-using RSSAnimeFeed_Console.Discord_Bot;
-using Newtonsoft.Json.Linq;
 using Discord.Net;
 using Discord.WebSocket;
+using Newtonsoft.Json;
+using SimpleFeedReader;
+
 
 namespace RSSAnimeFeed_Console
 {
     public class Program
     {
         static void Main(string[] args)
-        {         
+        {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.BackgroundColor = ConsoleColor.Black;
             Console.WriteLine("\n\tShiki Say: Hello, World!");
 
             //DeleteCachFiles();
-            List<FeedItem> pingAnimes = CheckNewAnimeTitle();   // get rss anime feed list
-            new Program().MainAsync(pingAnimes);                // Async is important for discord bot
-        }
-
-        // Connect Discord Bot
-        public async Task MainAsync(List<FeedItem> pingAnimes)  // Async discord anime ping bot
-        {
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.WriteLine("\n\tShiki Say: Hello, World! In MainAsync Method :)");
-
-            SendAnimesToDiscordBot(pingAnimes);                 // ping updatet animes
-        }
-
-        // Connect Discord Bot
-        public async void SendAnimesToDiscordBot(List<FeedItem> pingAnimes)
-        {
-            DiscordPingBot animePingBot = new DiscordPingBot(pingAnimes);
-            animePingBot.ConnectDiscordBot();
+            //List<FeedItem> pingAnimes = CheckNewAnimeTitle();   // get rss anime feed list
+            //List<FeedItem> pingAnimes = new List<FeedItem>();   // get rss anime feed list
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public static List<FeedItem> CheckNewAnimeTitle()
+        public static void PushNewAnimeTitle()
         {
-            RSSLibarie rssrReader = new RSSLibarie();
-            return rssrReader.CheckNewAnimeTitleExist();
+            RssFeed rssrReader = new RssFeed(); // get rss feed anime title
+            RssFeedWeebHook rssFeedWeebHook = new RssFeedWeebHook(rssrReader.CheckNewAnimeTitleExist()); // push weebhook anime title 
         }
 
         /// <summary>

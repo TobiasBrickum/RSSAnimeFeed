@@ -1,27 +1,22 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SimpleFeedReader;
+using Newtonsoft.Json;
 
 namespace RSSAnimeFeed_Console
 {
-    public class SaveLoadJsonGeneric<T>
+    public class IOJsonGeneric<T>
     {
         // field
-        public char Seperator { get; private set; }
+        private char _Seperator = StaticValues.Seperator;
         public string FileName { get; private set; }
         public string FilePath { get; private set; }
         public string FileFullPath { get; private set; }
 
         // constructor
-
-        public SaveLoadJsonGeneric()
-        {
-            Seperator = Path.DirectorySeparatorChar;
-        }
 
         /// <summary>
         ///  
@@ -29,32 +24,12 @@ namespace RSSAnimeFeed_Console
         /// <param name="fileName"> file.json </param>
         /// <param name="filePath"> folder </param>
         /// <param name="fileFullpath"> foler//file.json </param>
-        public SaveLoadJsonGeneric(string fileName, string filePath, string fileFullPath)
+        public IOJsonGeneric(string fileName, string filePath, string fileFullPath)
         {
-            CeckPath(fileName, filePath, fileFullPath);
-        }
-
-        // todo
-        private void CeckPath(string fileName, string filePath, string fileFullPath)
-        {
+            _Seperator = StaticValues.Seperator;
             FileName = fileName;
             FilePath = filePath;
             FileFullPath = fileFullPath;
-            Seperator = Path.DirectorySeparatorChar;
-        }
-
-        // todo
-        public void SetNewPathValues(string fileName, string filePath, string fileFullPath)
-        {
-            FileName = fileName;
-            FilePath = filePath;
-            FileFullPath = fileFullPath;
-        }
-
-        // todo
-        public static string GetSeperatorPath()
-        {
-            return null;
         }
 
         /// <summary>
@@ -70,7 +45,7 @@ namespace RSSAnimeFeed_Console
             }
             catch (Exception e)
             {
-                Console.Error.WriteLine("Save Json File Error: " + e.Message);
+                Console.Error.WriteLine("Create Jsonfile error: " + e.Message);
             }
         }
 
@@ -83,12 +58,11 @@ namespace RSSAnimeFeed_Console
             try
             {
                 string jsonValue = File.ReadAllText(FileFullPath);
-                T ret = JsonConvert.DeserializeObject<T>(jsonValue);
-                return ret;
+                return JsonConvert.DeserializeObject<T>(jsonValue);
             }
             catch (Exception e)
             {
-                Console.Error.WriteLine("Load Json File Error: " + e.Message);
+                Console.Error.WriteLine("Load Jsonfile error: " + e.Message);
                 return default(T);
             }
         }
