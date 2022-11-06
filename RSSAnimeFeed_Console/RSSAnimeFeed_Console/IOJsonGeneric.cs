@@ -11,10 +11,8 @@ namespace RSSAnimeFeed_Console
     public class IOJsonGeneric<T>
     {
         // field
-        private char _Seperator = StaticValues.Seperator;
-        public string FileName { get; private set; }
-        public string FilePath { get; private set; }
-        public string FileFullPath { get; private set; }
+        private char _Seperator = StaticValues.seperator;
+        public CreateFilePath File { get; private set; }
 
         // constructor
 
@@ -24,12 +22,10 @@ namespace RSSAnimeFeed_Console
         /// <param name="fileName"> file.json </param>
         /// <param name="filePath"> folder </param>
         /// <param name="fileFullpath"> foler//file.json </param>
-        public IOJsonGeneric(string fileName, string filePath, string fileFullPath)
+        public IOJsonGeneric(CreateFilePath value)
         {
-            _Seperator = StaticValues.Seperator;
-            FileName = fileName;
-            FilePath = filePath;
-            FileFullPath = fileFullPath;
+            _Seperator = StaticValues.seperator;
+            File = value;
         }
 
         /// <summary>
@@ -41,7 +37,7 @@ namespace RSSAnimeFeed_Console
             try
             {
                 string jsonValue = JsonConvert.SerializeObject(value, Formatting.Indented);
-                File.WriteAllText(FileFullPath, jsonValue);
+                System.IO.File.WriteAllText(File.FileFullPath, jsonValue);
             }
             catch (Exception e)
             {
@@ -57,7 +53,7 @@ namespace RSSAnimeFeed_Console
         {
             try
             {
-                string jsonValue = File.ReadAllText(FileFullPath);
+                string jsonValue = System.IO.File.ReadAllText(File.FileFullPath);
                 return JsonConvert.DeserializeObject<T>(jsonValue);
             }
             catch (Exception e)

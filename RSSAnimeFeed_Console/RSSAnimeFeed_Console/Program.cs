@@ -42,7 +42,7 @@ namespace RSSAnimeFeed_Console
         /// </summary>
         public static void DeleteCachFiles()
         {
-            string directoryName = "Rss_Feed_Files";
+            string directoryName = StaticValues.MainDirectory;
             try
             {
                 if(Directory.Exists(directoryName) == true)

@@ -12,13 +12,15 @@ namespace RSSAnimeFeed_Console
     public class RssFeed
     {
         // field
-        char seperator = StaticValues.Seperator;
+        public readonly char seperator = StaticValues.seperator;
         //public string Empty_Propertie { get; set; }
 
         // constructor
+        /*
         public RssFeed()
         {
         }
+        */
 
         /// <summary>
         /// https://github.com/RobThree/SimpleFeedReader
@@ -26,41 +28,34 @@ namespace RSSAnimeFeed_Console
         /// </summary>
         public List<FeedItem> CheckNewAnimeTitleExist()
         {
-            string npingUpcomingAnimeTitleFile = $"Ping_Anime_Title.json";
-            string pingUpcomingAnimeTitleFilePath = $"Rss_Feed_Files";
-            string pingUpcomingAnimeTitleFileFullPath = pingUpcomingAnimeTitleFilePath + seperator + npingUpcomingAnimeTitleFile;
+            IOJsonGeneric<List<FeedItem>> tempJasonFile;
 
-            string oldAnimeFile = $"Old_Anime_Title.json";
-            string oldAnimeFilePath = $"Rss_Feed_Files";
-            string oldAnimeFileFullPath = oldAnimeFilePath + seperator + oldAnimeFile;
-
-            IOJsonGeneric<List<FeedItem>> slJasonGeneric;
             List<FeedItem> newSaveAnimeTitle = new List<FeedItem>();        // save new animes
             List<FeedItem> oldLoadAnimeTitle = new List<FeedItem>();        // load old animes
-            List<FeedItem> pingUpcomingAnimeTitle = new List<FeedItem>();   // ping new animes via discord
+            List<FeedItem> pingUpcomingAnimeTitle = new List<FeedItem>();   // ping new animes via weebhook ect.
 
             // if file exist -> load anime title file in memory 
 
-            slJasonGeneric = new IOJsonGeneric<List<FeedItem>>(oldAnimeFile, oldAnimeFilePath, oldAnimeFileFullPath);
+            tempJasonFile = new IOJsonGeneric<List<FeedItem>>(StaticValues.Old_Anime_Title_Json);
             newSaveAnimeTitle = ReadRssFeedAnimeTitle();        // read new anime title from rss feed
 
-            if (File.Exists(oldAnimeFileFullPath) == false)
+            if (File.Exists(StaticValues.Old_Anime_Title_Json.FileFullPath) == false)
             {
-                slJasonGeneric.SaveJson(newSaveAnimeTitle);     // if not exist create old anime title file
+                tempJasonFile.SaveJson(newSaveAnimeTitle);     // if not exist create old anime title file
             }
 
-            oldLoadAnimeTitle = slJasonGeneric.LoadJson();      // load old anime title file
+            oldLoadAnimeTitle = tempJasonFile.LoadJson();      // load old anime title file
 
             pingUpcomingAnimeTitle = CompareOldNewAnimeTitle(oldLoadAnimeTitle, newSaveAnimeTitle);    // create updated anime ping list 
-            slJasonGeneric.SaveJson(newSaveAnimeTitle);                                                // update old anime file
+            tempJasonFile.SaveJson(newSaveAnimeTitle);                                                // update old anime file
 
-            slJasonGeneric = new IOJsonGeneric<List<FeedItem>>(npingUpcomingAnimeTitleFile, pingUpcomingAnimeTitleFilePath, pingUpcomingAnimeTitleFileFullPath);
-            slJasonGeneric.SaveJson(pingUpcomingAnimeTitle);                                           // save anime ping list
+            tempJasonFile = new IOJsonGeneric<List<FeedItem>>(StaticValues.Ping_Anime_Title_Json);
+            tempJasonFile.SaveJson(pingUpcomingAnimeTitle);                                           // save anime ping list
 
+            // view console anime files
             ViewInConsole.ViewList(pingUpcomingAnimeTitle, "Updated Anime title to ping: ");
             ViewInConsole.ViewList(newSaveAnimeTitle, "All Rss Feed animes");
 
-            //feed discords bot with anime ping message
             return pingUpcomingAnimeTitle;
         }
 
@@ -73,8 +68,7 @@ namespace RSSAnimeFeed_Console
         {
             try
             {
-                //string rssFeedUrl = "http://feeds.feedburner.com/crunchyroll/rss/anime?lang=deDE"; // from https://www.crunchyroll.com/de/feed
-                string rssFeedUrl = "https://www.crunchyroll.com/rss/anime?lang=deDE";               // from https://www.crunchyroll.com/de/feed
+                string rssFeedUrl = StaticValues.RssFeedUrl;
                 Console.WriteLine("\nLoad Rss Feed from following url: " + rssFeedUrl);
 
                 FeedReader rddFeedReader = new FeedReader();
@@ -102,24 +96,24 @@ namespace RSSAnimeFeed_Console
         /// <param name="oldAnimeList"></param>
         /// <param name="newAnimelist"></param>
         /// <returns></returns>
-        [Obsolete] 
+        /// 
         public List<FeedItem> CompareOldNewAnimeTitle(List<FeedItem> oldAnimeList, List<FeedItem> newAnimelist)
         {
             // 
-            int latestOldAnimeDay = GetDateDayOfTime(oldAnimeList.ElementAt(0));
-            int newAnimeDay       = GetDateDayOfTime(newAnimelist.ElementAt(0));
+            int latestOldAnimeDay = GetDayOfTime(oldAnimeList.ElementAt(0));
+            int newAnimeDay       = GetDayOfTime(newAnimelist.ElementAt(0));
             int tempAnimeDay      = 0;
 
             //oldAnimeList.RemoveRange(0, 0);       // only for testing
             List<FeedItem> returnNewAnims = new List<FeedItem>();
-            int oldAnimeListCount = oldAnimeList.Count;
-            int newAnimelistCount = newAnimelist.Count;
+            //int oldAnimeListCount = oldAnimeList.Count;
+            //int newAnimelistCount = newAnimelist.Count;
 
             if (oldAnimeList != null && newAnimelist != null)
             {
                 for (int i = 0; i < newAnimelist.Count; i++)
                 {
-                    tempAnimeDay = GetDateDayOfTime(newAnimelist.ElementAt(i));
+                    tempAnimeDay = GetDayOfTime(newAnimelist.ElementAt(i));
                     // add anime to returnList if anime realeased
                     if (tempAnimeDay >= latestOldAnimeDay) 
                     {
@@ -135,26 +129,13 @@ namespace RSSAnimeFeed_Console
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public int GetDateDayOfTime(FeedItem value)
+        public int GetDayOfTime(FeedItem value)
         {
             if (value == null)
             {
                 return 0;
             }
-            int ret = value.Date.Year + value.Date.DayOfYear;
-            return ret;
+            return value.Date.Year + value.Date.DayOfYear;
         }
-
-        /*
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="value"></param>
-        public void DiscordBotMessage(List<FeedItem> value)
-        {
-
-            DiscordPingBot discordPingBot = new DiscordPingBot();
-        }
-        */
     }
 }
