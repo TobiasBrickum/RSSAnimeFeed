@@ -4,6 +4,29 @@ namespace RSSAnimeFeed_Console
 {
     public class ViewInConsole
     {
+        public static void ViewException(Exception e, string exceptionMessage)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.Error.WriteLine("\n Create File error: " + e.Message);
+            Console.Error.WriteLine("\n InnerException:\n" + e.InnerException);
+            Console.ForegroundColor = StaticValues.ConsoleColorForeground;
+            Console.BackgroundColor = StaticValues.ConsoleColorBackground;
+        }
+
+        /*
+        public static void ViewGeneric<T>(T value)
+        {
+            string delimiter = "#######################################################################################################################";
+            Console.WriteLine("\n\n\t" + delimiter);
+            foreach (Object x in value)
+            {
+                Console.WriteLine(x);
+            }
+            Console.WriteLine("\t" + delimiter);
+        }
+        */
+
         /// <summary>
         /// View String List in Console
         /// </summary>

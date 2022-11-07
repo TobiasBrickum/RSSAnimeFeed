@@ -19,11 +19,10 @@ namespace RSSAnimeFeed_Console
     {
         static void Main(string[] args)
         {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.BackgroundColor = ConsoleColor.Black;
+            StaticValues loadApplicationSettings = new StaticValues();
             Console.WriteLine("\n\tShiki Say: Hello, World!");
 
-            CreateIniTestFile();
+            //CreateIniTestFile();
 
             //DeleteCachFiles();
             //List<FeedItem> pingAnimes = CheckNewAnimeTitle();   // get rss anime feed list
@@ -35,7 +34,7 @@ namespace RSSAnimeFeed_Console
             SaveLoadFile<string> saveLoadFile = new SaveLoadFile<string>(StaticValues.Configuration_Ini);
             string value = "123";
             saveLoadFile.SaveFile(value);
-            //value = saveLoadFile.LoadFile();
+            value = saveLoadFile.LoadFile();
         }
 
         public static void PushNewAnimeTitle()

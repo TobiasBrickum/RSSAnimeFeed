@@ -51,16 +51,8 @@ namespace RSSAnimeFeed_Console
                         {
                             FileIniDataParser parser = new FileIniDataParser();
                             IniData data = parser.ReadFile(File.FileFullPath);
-                            data["Global Settings"]["All fine"] = "true";
-                            data["Global Settings"]["All dump"] = "false";
-                            data["UI"]["fullscreen"] = "true";
 
-                            string useFullScreenStr = data["UI"]["fullscreen"];
-
-                            Console.WriteLine(data.ToString());
-                            // useFullScreenStr contains "true"
-                            bool useFullScreen = bool.Parse(useFullScreenStr);
-
+                            //parser.WriteFile(File.FileFullPath, value);
                         }
                         break;
                 }
@@ -68,7 +60,7 @@ namespace RSSAnimeFeed_Console
             }
             catch (Exception e)
             {
-                Console.Error.WriteLine("Create Jsonfile error: " + e.Message);
+                ViewInConsole.ViewException(e, "Create File error: ");
             }
         }
 
@@ -107,7 +99,7 @@ namespace RSSAnimeFeed_Console
             }
             catch (Exception e)
             {
-                Console.Error.WriteLine("Load Jsonfile error: " + e.Message);
+                ViewInConsole.ViewException(e, "Load File error: ");
                 return default(T);
             }
         }

@@ -6,7 +6,8 @@ using System.Text;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-
+using IniParser;
+using IniParser.Model;
 
 namespace RSSAnimeFeed_Console
 {
@@ -19,6 +20,9 @@ namespace RSSAnimeFeed_Console
     public class StaticValues
     {
         // field
+        public static readonly ConsoleColor ConsoleColorForeground;
+        public static readonly ConsoleColor ConsoleColorBackground;
+
         public static readonly string RssFeedUrl;
 
         public static readonly char seperator;
@@ -30,6 +34,11 @@ namespace RSSAnimeFeed_Console
         // constructor
         static StaticValues()
         {
+            ConsoleColorForeground = ConsoleColor.Green;
+            ConsoleColorBackground = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColorForeground;
+            Console.BackgroundColor = ConsoleColorBackground;
+
             RssFeedUrl = "https://www.crunchyroll.com/rss/anime?lang=deDE"; // from https://www.crunchyroll.com/de/feed
 
             seperator = Path.DirectorySeparatorChar;
@@ -49,6 +58,54 @@ namespace RSSAnimeFeed_Console
             string testIniFilePath = MainDirectory;
             string testIniFileFullPath = testIniFilePath + seperator + testIniFile;
             Configuration_Ini = new CreateFilePath(EFileType.Ini, testIniFile, testIniFilePath, testIniFileFullPath);
+
+            if (! File.Exists(testIniFileFullPath))
+            {
+                CreateDefaultSettings();
+            }
+
+            if (File.Exists(testIniFileFullPath))
+            {
+                // to do
+                CreateDefaultSettings();
+            }
+        }
+
+        private static void CreateDefaultSettings()
+        {
+            File.Create(Configuration_Ini.FileFullPath);    
+            FileIniDataParser parser = new FileIniDataParser();
+            // file not exist   = file not found exception
+            // file exist       = file not access because it is being used by another process. 
+            IniData data = parser.ReadFile(Configuration_Ini.FileFullPath); 
+
+            data["Application Settings"]["ConsoleColorForeground"] = "Green";
+            data["Application Settings"]["ConsoleColorBackground"] = "Black";
+
+            data["Rss Feed Settings"]["Url"] = "https://www.crunchyroll.com/rss/anime?lang=deDE";
+
+            data["Weebhook Settings"]["Url"] = "";
+
+            parser.WriteFile(Configuration_Ini.FileFullPath, data);
+            /*
+            SaveLoadFile<IniData> saveLoad = new SaveLoadFile<IniData>(Configuration_Ini);
+            saveLoad.SaveFile(data);
+            */
+        }
+
+        private static void LoadDefaultSettings()
+        {
+            /*
+            FileIniDataParser parser = new FileIniDataParser();
+            IniData data = parser.ReadFile(Configuration_Ini.FileFullPath);
+
+            string useFullScreenStr = data["UI"]["fullscreen"];
+
+            
+            parser.WriteFile(Configuration_Ini.FileFullPath, data);
+            // useFullScreenStr contains "true"
+            bool useFullScreen = bool.Parse(useFullScreenStr);
+            */
         }
     }
 
@@ -68,5 +125,16 @@ namespace RSSAnimeFeed_Console
             FileFullPath    = fileFullPath;
             FileType        = fileType;
         }
+    }
+
+    public class CreatApplicationSettings
+    {
+        public CreatApplicationSettings()
+        {
+            
+
+        }
+
+
     }
 }
