@@ -11,17 +11,6 @@ namespace RSSAnimeFeed_Console
 {
     public class RssFeed
     {
-        // field
-        public readonly char seperator = StaticValues.seperator;
-        //public string Empty_Propertie { get; set; }
-
-        // constructor
-        /*
-        public RssFeed()
-        {
-        }
-        */
-
         /// <summary>
         /// https://github.com/RobThree/SimpleFeedReader
         /// Read RSS Recently Added Anime Videos from Crunchycroll
@@ -36,7 +25,7 @@ namespace RSSAnimeFeed_Console
 
             // if file exist -> load anime title file in memory 
 
-            tempJasonFile = new SaveLoadFile<List<FeedItem>>(StaticValues.Old_Anime_Title_Json, FileType.json);
+            tempJasonFile = new SaveLoadFile<List<FeedItem>>(StaticValues.Old_Anime_Title_Json);
             newSaveAnimeTitle = ReadRssFeedAnimeTitle();        // read new anime title from rss feed
 
             if (File.Exists(StaticValues.Old_Anime_Title_Json.FileFullPath) == false)
@@ -49,7 +38,7 @@ namespace RSSAnimeFeed_Console
             pingUpcomingAnimeTitle = CompareOldNewAnimeTitle(oldLoadAnimeTitle, newSaveAnimeTitle);    // create updated anime ping list 
             tempJasonFile.SaveFile(newSaveAnimeTitle);                                                // update old anime file
 
-            tempJasonFile = new SaveLoadFile<List<FeedItem>>(StaticValues.Ping_Anime_Title_Json, FileType.json);
+            tempJasonFile = new SaveLoadFile<List<FeedItem>>(StaticValues.Ping_Anime_Title_Json);
             tempJasonFile.SaveFile(pingUpcomingAnimeTitle);                                           // save anime ping list
 
             // view console anime files

@@ -23,14 +23,21 @@ namespace RSSAnimeFeed_Console
             Console.BackgroundColor = ConsoleColor.Black;
             Console.WriteLine("\n\tShiki Say: Hello, World!");
 
+            CreateIniTestFile();
+
             //DeleteCachFiles();
             //List<FeedItem> pingAnimes = CheckNewAnimeTitle();   // get rss anime feed list
             //List<FeedItem> pingAnimes = new List<FeedItem>();   // get rss anime feed list
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        public static void CreateIniTestFile()
+        {
+            SaveLoadFile<string> saveLoadFile = new SaveLoadFile<string>(StaticValues.Configuration_Ini);
+            string value = "123";
+            saveLoadFile.SaveFile(value);
+            //value = saveLoadFile.LoadFile();
+        }
+
         public static void PushNewAnimeTitle()
         {
             RssFeed rssrReader = new RssFeed(); // get rss feed anime title

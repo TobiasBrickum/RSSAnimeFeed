@@ -10,9 +10,10 @@ using System.Threading.Tasks;
 
 namespace RSSAnimeFeed_Console
 {
-    public enum FileType
+    // enum
+    public enum EFileType
     {
-        json, ini
+        Json, Ini
     }
 
     public class StaticValues
@@ -24,6 +25,7 @@ namespace RSSAnimeFeed_Console
         public static readonly string MainDirectory;
         public static readonly CreateFilePath Ping_Anime_Title_Json;
         public static readonly CreateFilePath Old_Anime_Title_Json;
+        public static readonly CreateFilePath Configuration_Ini;
 
         // constructor
         static StaticValues()
@@ -36,35 +38,35 @@ namespace RSSAnimeFeed_Console
             string newPingFile = $"Ping_Anime_Title.json";
             string newPingFilePath = MainDirectory;
             string newPingFileFullPath = newPingFilePath + seperator + newPingFile;
-            Ping_Anime_Title_Json = new CreateFilePath(newPingFile, newPingFilePath, newPingFileFullPath);
+            Ping_Anime_Title_Json = new CreateFilePath(EFileType.Json, newPingFile, newPingFilePath, newPingFileFullPath);
 
             string oldAnimeFile = $"Old_Anime_Title.json";
             string oldAnimeFilePath = MainDirectory;
             string oldAnimeFileFullPath = oldAnimeFilePath + seperator + oldAnimeFile;
-            Old_Anime_Title_Json = new CreateFilePath(oldAnimeFile, oldAnimeFilePath, oldAnimeFileFullPath);
+            Old_Anime_Title_Json = new CreateFilePath(EFileType.Json, oldAnimeFile, oldAnimeFilePath, oldAnimeFileFullPath);            
+            
+            string testIniFile = $"Configuration.ini";
+            string testIniFilePath = MainDirectory;
+            string testIniFileFullPath = testIniFilePath + seperator + testIniFile;
+            Configuration_Ini = new CreateFilePath(EFileType.Ini, testIniFile, testIniFilePath, testIniFileFullPath);
         }
     }
 
     public class CreateFilePath
     {
+        // field
         public string FileName { get; private set; }
         public string FilePath { get; private set; }
         public string FileFullPath { get; private set; }
+        public EFileType FileType { get; private set; }
 
         // constructor
-        /// <summary>
-        ///  
-        /// </summary>
-        /// <param name="fileName"> file.json </param>
-        /// <param name="filePath"> folder </param>
-        /// <param name="fileFullpath"> foler//file.json </param>
-        public CreateFilePath(string fileName, string filePath, string fileFullPath)
+        public CreateFilePath(EFileType fileType , string fileName, string filePath, string fileFullPath)
         {
-            FileName = fileName;
-            FilePath = filePath;
-            FileFullPath = fileFullPath;
+            FileName        = fileName;
+            FilePath        = filePath;
+            FileFullPath    = fileFullPath;
+            FileType        = fileType;
         }
     }
-
-
 }

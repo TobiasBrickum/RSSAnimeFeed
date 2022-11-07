@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using SimpleFeedReader;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using IniParser;
+using IniParser.Model;
 
 namespace RSSAnimeFeed_Console
 {
@@ -14,7 +16,6 @@ namespace RSSAnimeFeed_Console
         // field
         private char _Seperator = StaticValues.seperator;
         public CreateFilePath File { get; private set; }
-        public FileType FileType { get; private set; }
 
         // constructor
 
@@ -24,11 +25,10 @@ namespace RSSAnimeFeed_Console
         /// <param name="fileName"> file.json </param>
         /// <param name="filePath"> folder </param>
         /// <param name="fileFullpath"> foler//file.json </param>
-        public SaveLoadFile(CreateFilePath value, FileType fileType)
+        public SaveLoadFile(CreateFilePath value)
         {
             _Seperator = StaticValues.seperator;
             File = value;
-            FileType = fileType;
         }
 
         /// <summary>
@@ -40,16 +40,27 @@ namespace RSSAnimeFeed_Console
             try
             {
                 string temp = null;
-                switch (FileType)
+                switch (File.FileType)
                 {
-                    case FileType.json:
+                    case EFileType.Json:
                         {
                             temp = JsonConvert.SerializeObject(value, Formatting.Indented);
                         }
                         break;
-                    case FileType.ini:
+                    case EFileType.Ini:
                         {
-                            temp = null;
+                            FileIniDataParser parser = new FileIniDataParser();
+                            IniData data = parser.ReadFile(File.FileFullPath);
+                            data["Global Settings"]["All fine"] = "true";
+                            data["Global Settings"]["All dump"] = "false";
+                            data["UI"]["fullscreen"] = "true";
+
+                            string useFullScreenStr = data["UI"]["fullscreen"];
+
+                            Console.WriteLine(data.ToString());
+                            // useFullScreenStr contains "true"
+                            bool useFullScreen = bool.Parse(useFullScreenStr);
+
                         }
                         break;
                 }
@@ -70,19 +81,27 @@ namespace RSSAnimeFeed_Console
             try
             {
                 string temp = null;
-                switch (FileType)
+                switch (File.FileType)
                 {
-                    case FileType.json:
+                    case EFileType.Json:
                         {
                             temp = System.IO.File.ReadAllText(File.FileFullPath);
                             return JsonConvert.DeserializeObject<T>(temp);
                         }
-                        break;
-                    case FileType.ini:
+                    case EFileType.Ini:
                         {
-                            return default(T);
+                            FileIniDataParser parser = new FileIniDataParser();
+                            IniData data = parser.ReadFile(File.FileFullPath);
+                            
+                            Console.WriteLine(data.ToString());
+                            //return data.ToString();
+                            /*
+                            string useFullScreenStr = data["UI"]["fullscreen"];
+                            // useFullScreenStr contains "true"
+                            bool useFullScreen = bool.Parse(useFullScreenStr);
+                            */
                         }
-                        break;           
+                        break;
                 }
                 return default(T);
             }
