@@ -28,7 +28,7 @@ namespace RSSAnimeFeed_Console
         /// </summary>
         public List<FeedItem> CheckNewAnimeTitleExist()
         {
-            IOJsonGeneric<List<FeedItem>> tempJasonFile;
+            SaveLoadFile<List<FeedItem>> tempJasonFile;
 
             List<FeedItem> newSaveAnimeTitle = new List<FeedItem>();        // save new animes
             List<FeedItem> oldLoadAnimeTitle = new List<FeedItem>();        // load old animes
@@ -36,21 +36,21 @@ namespace RSSAnimeFeed_Console
 
             // if file exist -> load anime title file in memory 
 
-            tempJasonFile = new IOJsonGeneric<List<FeedItem>>(StaticValues.Old_Anime_Title_Json);
+            tempJasonFile = new SaveLoadFile<List<FeedItem>>(StaticValues.Old_Anime_Title_Json, FileType.json);
             newSaveAnimeTitle = ReadRssFeedAnimeTitle();        // read new anime title from rss feed
 
             if (File.Exists(StaticValues.Old_Anime_Title_Json.FileFullPath) == false)
             {
-                tempJasonFile.SaveJson(newSaveAnimeTitle);     // if not exist create old anime title file
+                tempJasonFile.SaveFile(newSaveAnimeTitle);     // if not exist create old anime title file
             }
 
-            oldLoadAnimeTitle = tempJasonFile.LoadJson();      // load old anime title file
+            oldLoadAnimeTitle = tempJasonFile.LoadFile();      // load old anime title file
 
             pingUpcomingAnimeTitle = CompareOldNewAnimeTitle(oldLoadAnimeTitle, newSaveAnimeTitle);    // create updated anime ping list 
-            tempJasonFile.SaveJson(newSaveAnimeTitle);                                                // update old anime file
+            tempJasonFile.SaveFile(newSaveAnimeTitle);                                                // update old anime file
 
-            tempJasonFile = new IOJsonGeneric<List<FeedItem>>(StaticValues.Ping_Anime_Title_Json);
-            tempJasonFile.SaveJson(pingUpcomingAnimeTitle);                                           // save anime ping list
+            tempJasonFile = new SaveLoadFile<List<FeedItem>>(StaticValues.Ping_Anime_Title_Json, FileType.json);
+            tempJasonFile.SaveFile(pingUpcomingAnimeTitle);                                           // save anime ping list
 
             // view console anime files
             ViewInConsole.ViewList(pingUpcomingAnimeTitle, "Updated Anime title to ping: ");

@@ -10,6 +10,11 @@ using System.Threading.Tasks;
 
 namespace RSSAnimeFeed_Console
 {
+    public enum FileType
+    {
+        json, ini
+    }
+
     public class StaticValues
     {
         // field
