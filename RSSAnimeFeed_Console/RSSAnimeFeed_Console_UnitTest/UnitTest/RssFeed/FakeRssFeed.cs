@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace RSSAnimeFeed_Console.UnitTest
+namespace RSSAnimeFeed_Console_UnitTest.UnitTest.RssFeed
 {
     [TestFixture] // recomend for NUnit.Framework
     public class FakeRssFeed

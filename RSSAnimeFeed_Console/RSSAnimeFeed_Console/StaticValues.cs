@@ -14,7 +14,7 @@ namespace RSSAnimeFeed_Console
     // enum
     public enum EFileType
     {
-        Json, Ini
+        Json, Ini, Env, UnitTest
     }
 
     public class StaticValues
@@ -59,24 +59,25 @@ namespace RSSAnimeFeed_Console
             string testIniFileFullPath = testIniFilePath + seperator + testIniFile;
             Configuration_Ini = new CreateFilePath(EFileType.Ini, testIniFile, testIniFilePath, testIniFileFullPath);
 
-            if (! File.Exists(testIniFileFullPath))
+            if (!File.Exists(testIniFileFullPath))
             {
-                CreateDefaultSettings();
+                //CreateDefaultSettings();
             }
 
             if (File.Exists(testIniFileFullPath))
             {
-                // to do
-                CreateDefaultSettings();
+                //LoadDefaultSettings();
             }
         }
 
         private static void CreateDefaultSettings()
         {
-            File.Create(Configuration_Ini.FileFullPath);    
-            FileIniDataParser parser = new FileIniDataParser();
+            // using important because
             // file not exist   = file not found exception
             // file exist       = file not access because it is being used by another process. 
+            using (File.Create(Configuration_Ini.FileFullPath));
+            
+            FileIniDataParser parser = new FileIniDataParser();
             IniData data = parser.ReadFile(Configuration_Ini.FileFullPath); 
 
             data["Application Settings"]["ConsoleColorForeground"] = "Green";
@@ -95,7 +96,6 @@ namespace RSSAnimeFeed_Console
 
         private static void LoadDefaultSettings()
         {
-            /*
             FileIniDataParser parser = new FileIniDataParser();
             IniData data = parser.ReadFile(Configuration_Ini.FileFullPath);
 
@@ -105,7 +105,15 @@ namespace RSSAnimeFeed_Console
             parser.WriteFile(Configuration_Ini.FileFullPath, data);
             // useFullScreenStr contains "true"
             bool useFullScreen = bool.Parse(useFullScreenStr);
-            */
+
+        }
+
+        public class CreatApplicationSettings
+        {
+            public CreatApplicationSettings()
+            {
+                LoadDefaultSettings();
+            }
         }
     }
 
@@ -118,6 +126,7 @@ namespace RSSAnimeFeed_Console
         public EFileType FileType { get; private set; }
 
         // constructor
+        public CreateFilePath() { }
         public CreateFilePath(EFileType fileType , string fileName, string filePath, string fileFullPath)
         {
             FileName        = fileName;
@@ -127,14 +136,5 @@ namespace RSSAnimeFeed_Console
         }
     }
 
-    public class CreatApplicationSettings
-    {
-        public CreatApplicationSettings()
-        {
-            
 
-        }
-
-
-    }
 }

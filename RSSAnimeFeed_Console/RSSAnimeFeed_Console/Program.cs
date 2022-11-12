@@ -12,7 +12,6 @@ using Discord.WebSocket;
 using Newtonsoft.Json;
 using SimpleFeedReader;
 
-
 namespace RSSAnimeFeed_Console
 {
     public class Program
@@ -22,6 +21,7 @@ namespace RSSAnimeFeed_Console
             StaticValues loadApplicationSettings = new StaticValues();
             Console.WriteLine("\n\tShiki Say: Hello, World!");
 
+            
             //CreateIniTestFile();
 
             //DeleteCachFiles();

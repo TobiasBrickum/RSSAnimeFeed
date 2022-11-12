@@ -55,6 +55,15 @@ namespace RSSAnimeFeed_Console
                             //parser.WriteFile(File.FileFullPath, value);
                         }
                         break;
+                    case EFileType.Env:
+                        {
+
+                        }
+                        break;
+                    default:
+                        {
+                            throw new Exception("Wrong Filetyp");
+                        }
                 }
                 System.IO.File.WriteAllText(File.FileFullPath, temp);
             }
@@ -94,6 +103,15 @@ namespace RSSAnimeFeed_Console
                             */
                         }
                         break;
+                    case EFileType.Env:
+                        {
+
+                        }
+                        break;
+                    default:
+                        {
+                            throw new Exception("Wrong Filetyp");
+                        }
                 }
                 return default(T);
             }
