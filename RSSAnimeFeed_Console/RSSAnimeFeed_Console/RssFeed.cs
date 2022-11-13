@@ -1,10 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using SimpleFeedReader;
 
 namespace RSSAnimeFeed_Console

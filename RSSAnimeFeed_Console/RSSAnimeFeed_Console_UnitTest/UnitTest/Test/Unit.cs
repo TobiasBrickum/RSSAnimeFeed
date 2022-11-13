@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace RSSAnimeFeed_Console.UnitTest.Test
+namespace RSSAnimeFeed_Console_UnitTest.UnitTest.Test
 {
     [TestFixture]
     public class Unit

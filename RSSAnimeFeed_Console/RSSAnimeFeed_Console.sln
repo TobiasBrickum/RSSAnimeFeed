@@ -5,7 +5,7 @@ VisualStudioVersion = 17.3.32811.315
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RSSAnimeFeed_Console", "RSSAnimeFeed_Console\RSSAnimeFeed_Console.csproj", "{24523CC8-B1D7-4342-8C44-EB9E7609E6DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSSAnimeFeed_Console_UnitTest", "RSSAnimeFeed_Console_UnitTest\RSSAnimeFeed_Console_UnitTest.csproj", "{44F83605-71C8-44AC-9923-774D5C2A1FE0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RSSAnimeFeed_Console_UnitTest", "RSSAnimeFeed_Console_UnitTest\RSSAnimeFeed_Console_UnitTest.csproj", "{44F83605-71C8-44AC-9923-774D5C2A1FE0}"
 	ProjectSection(ProjectDependencies) = postProject
 		{24523CC8-B1D7-4342-8C44-EB9E7609E6DB} = {24523CC8-B1D7-4342-8C44-EB9E7609E6DB}
 	EndProjectSection
